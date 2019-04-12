@@ -47,6 +47,8 @@ provider:
         - dynamodb:DeleteItem
       # Restrict your iamRole Permissions to
       # the specific table for the stage
+      Resource:
+        - "Fn::GetAtt": [NotesTable, Arn]
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
