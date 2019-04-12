@@ -8,6 +8,18 @@ plugins:
 # serverless-webpack configuration
 # Enable auto-packing of external modules
 custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+  # Table Name set for local testing
+  tableName: ${self:custom.stage}-notes
+  # Set our DynamoDB throughput for prod and all other non-prod stages
+  tableThroughputs:
+    prod: 5 # Production App Throughput
+    default: 1 # Dev App Throughput
+  # Implement Dev & Prod Throughput Settings
+  tableThroughput: ${self:custom.tableThroughputs.${self:custom.stage}, self:custom.tableThroughputs.default}
+  # Load our WebPack config
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
@@ -20,6 +32,9 @@ provider:
 
   # 'iamRoleStatement' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
+  environment:
+    tablename: ${self:custom.tableName}
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -29,8 +44,9 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+        - dynamodb:Deleteitem
+      # Restrict your iamRole Permissions to
+      # the specific table for the stage
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
@@ -100,3 +116,5 @@ functions:
 resources:
   # API Gateway Errors
   - ${file(resources/api-gateway-errors.yml)}
+  # DynamoDN Resource
+  - ${file(resources/dynamodb-table.yml)}
