@@ -44,7 +44,7 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
-        - dynamodb:Deleteitem
+        - dynamodb:DeleteItem
       # Restrict your iamRole Permissions to
       # the specific table for the stage
 
