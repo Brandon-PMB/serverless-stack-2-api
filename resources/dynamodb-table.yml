@@ -1,0 +1,19 @@
+Resources: # Octothorpe - comment in YAML
+  NotesTable: # DynamoDB Resource Table - NotesTable
+    Type: AWS::DynamoDB::Table 
+    Properties:
+      TableName: ${self:custom.tableName} # Dynamically generated table
+      AttributeDefinitions:
+        - AttributeName: userId # userId attribute configuration
+          AttributeType: S  # Attribute Type
+        - AttributeName: noteId # noteId attribute configuration
+          AttributeType: S  # Attribute Type
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: noteId
+          KeyType: RANGE
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}
