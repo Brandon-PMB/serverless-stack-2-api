@@ -1,11 +1,11 @@
-Resource:
+Resources:
   # The federated identity for our user pool to auth with
   CognitoIdentityPool:
     Type: AWS::Cognito::IdentityPool
     Properties:
       # Generate a name based on the stage
       IdentityPoolName: ${self:custom.stage}IdentityPool
-      # Don't allow unauthenticated users
+      # Don't allow unathenticated users
       AllowUnauthenticatedIdentities: false
       # Link to our User Pool
       CognitoIdentityProviders:
@@ -77,13 +77,13 @@ Resource:
                 Action:
                   - 's3:*'
                 Resource:
-                  - Fn::Join
+                  - Fn::Join:
                     - ''
                     -
                       - Fn::GetAtt: [AttachmentsBucket, Arn]
-                      - '/private'
+                      - '/private/'
                       - '$'
-                      - '{cognito-identity.amazonaws.com:sub)/*'
+                      - '{cognito-identity.amazonaws.com:sub}/*'
 
 # Print out the Id of the Identity Pool that is created
 Outputs:
