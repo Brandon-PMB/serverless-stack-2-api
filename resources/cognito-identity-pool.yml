@@ -13,8 +13,8 @@ Resources:
             Ref: CognitoUserPoolClient
           ProviderName:
             Fn::GetAtt: [ "CognitoUserPool", "ProviderName" ]
-
-  # IAM Roles
+            
+  # IAM roles
   CognitoIdentityPoolRoles:
     Type: AWS::Cognito::IdentityPoolRoleAttachment
     Properties:
@@ -23,7 +23,7 @@ Resources:
       Roles:
         authenticated:
           Fn::GetAtt: [CognitoAuthRole, Arn]
-  
+          
   # IAM role used for authenticated users
   CognitoAuthRole:
     Type: AWS::IAM::Role
@@ -40,7 +40,7 @@ Resources:
             Condition:
               StringEquals:
                 'cognito-identity.amazonaws.com:aud':
-                Ref: CognitoIdentityPool
+                  Ref: CognitoIdentityPool
               'ForAnyValue:StringLike':
                 'cognito-identity.amazonaws.com:amr': authenticated
       Policies:
@@ -53,8 +53,8 @@ Resources:
                   - 'mobileanalytics:PutEvents'
                   - 'cognito-sync:*'
                   - 'cognito-identity:*'
-                Resources: '*'
-
+                Resource: '*'
+              
               # Allow users to invoke our API
               - Effect: 'Allow'
                 Action:
@@ -68,9 +68,9 @@ Resources:
                       - ':'
                       - Ref: AWS::AccountId
                       - ':'
-                      - Ref: ApiGatewayRestApi]
+                      - Ref: ApiGatewayRestApi
                       - '/*'
-
+              
               # Allow users to upload attachments to their
               # folder inside our S3 bucket
               - Effect: 'Allow'
@@ -84,7 +84,7 @@ Resources:
                       - '/private/'
                       - '$'
                       - '{cognito-identity.amazonaws.com:sub}/*'
-
+  
 # Print out the Id of the Identity Pool that is created
 Outputs:
   IdentityPoolId:
